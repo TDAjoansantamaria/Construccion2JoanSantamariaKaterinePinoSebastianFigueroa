@@ -19,4 +19,5 @@ public interface MedicalHistoryDao {
 
 	public boolean findHistoryByPetExist(MedicalHistoryDto medicalHistoryDto) throws Exception;
 
+
 }

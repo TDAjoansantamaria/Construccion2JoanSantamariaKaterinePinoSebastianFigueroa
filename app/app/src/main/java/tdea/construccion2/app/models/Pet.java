@@ -22,7 +22,7 @@ public class Pet {
 	private String name;
 	@ManyToOne
 	@JoinColumn(name = "idowner")
-	private Person ownerName;
+	private Person idOwner;
 	@Column(name = "age")
 	private int age;
 	@Column(name = "species")
@@ -37,6 +37,7 @@ public class Pet {
 	public Pet(PetDto petDto) {
 		this.idpet= petDto.getIdPet();
 		this.name = petDto.getName();
+		this.idOwner = new Person(petDto.getIdOwner());
 		this.age = petDto.getAge();
 		this.specie = petDto.getSpecies();
 		this.breed = petDto.getBreed();
@@ -47,11 +48,11 @@ public class Pet {
 	public Pet() {}
 
 	public Person getOwnerName() {
-		return ownerName;
+		return idOwner;
 	}
 
 	public void setOwnerName(Person ownerName) {
-		this.ownerName = ownerName;
+		this.idOwner = ownerName;
 	}
 
 	public Pet(PersonDto idOwner) {
@@ -65,11 +66,11 @@ public class Pet {
 	}
 
 	public Person getOwner() {
-		return ownerName;
+		return idOwner;
 	}
 
 	public void setOwner(Person ownerName) {
-		this.ownerName = ownerName;
+		this.idOwner = ownerName;
 	}
 
 	public int getAge() {

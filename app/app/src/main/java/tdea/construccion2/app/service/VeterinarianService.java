@@ -39,8 +39,6 @@ public class VeterinarianService implements LoginService, AdminService, VetServi
 	private PetDao petDao;
 	@Autowired
 	private OrderDao orderDao;
-	@Autowired
-	private OrderRepository orderRepository;
 
 	@Override
 	public void createUser(PersonDto personDto) throws Exception {
@@ -60,7 +58,7 @@ public class VeterinarianService implements LoginService, AdminService, VetServi
 
 	@Override
 	public void createOwner(PersonDto personDto) throws Exception {
-		if (personDao.findUserExist(personDto)) {
+		if (!personDao.findUserExist(personDto)) {
 			throw new Exception("ya existe un usuario con esa cedula");
 		}
 		personDao.createPerson(personDto);
@@ -90,7 +88,7 @@ public class VeterinarianService implements LoginService, AdminService, VetServi
 			throw new Exception("no hay un usuario valido");
 		}
 		PetDto petDto = (medicalHistoryDto.getIdPet());
-		if (!petDao.findPetExist(petDto)) {
+		if (petDao.findPetExist(petDto)) {
 			throw new Exception("No existe la mascota");
 		}
 
@@ -119,7 +117,7 @@ public class VeterinarianService implements LoginService, AdminService, VetServi
 	@Override
 	public void searchHistory(MedicalHistoryDto medicalHistoryDto) throws Exception {
 		PetDto petDto = medicalHistoryDto.getIdPet();
-		if (!petDao.findPetExist(petDto)) {
+		if (petDao.findPetExist(petDto)) {
 			throw new Exception("No existe la mascota");
 		}
 
@@ -131,6 +129,18 @@ public class VeterinarianService implements LoginService, AdminService, VetServi
 		medicalHistoryDao.searchHistory(medicalHistoryDto);
 
 	}
+	
+	@Override
+	public void searchOrder(MedicalHistoryDto medicalHistoryDto) throws Exception {
+		MedicalHistoryDao medicalHistoryDao = new MedicalHistoryDaoImpl();
+		//PetDto petDto = (medicalHistoryDto.getIdPet());
+		medicalHistoryDto.setidorder(medicalHistoryDto.getViewHistory());
+		if (!medicalHistoryDao.findOrderByDateExist(medicalHistoryDto)) {
+			throw new Exception("No existe ordenes para la mascota");
+		}
+		medicalHistoryDao.searchOrder(medicalHistoryDto);
+	}
+
 
 	@Override
 	public void viewHistory(MedicalHistoryDto medicalHistoryDto) throws Exception {
@@ -160,26 +170,20 @@ public class VeterinarianService implements LoginService, AdminService, VetServi
 		setSesionID(sesionDto.getId());
 		System.out.println("Usuario: " + sesionDto.getUserName() + " -- Inicia la sesion #" + sessionId);
 	}
+	
+	
+	
 
 	@Override
 	public void viewOrder(MedicalHistoryDto medicalHistoryDto) throws Exception {
 		medicalHistoryDto.setViewHistory(medicalHistoryDto.getViewHistory());
-		if (!medicalHistoryDao.findOrderByDateExist(medicalHistoryDto)) {
+		if (medicalHistoryDao.findOrderByDateExist(medicalHistoryDto)) {
 			throw new Exception("No existe la orden medica");
 		}
 		medicalHistoryDao.viewOrder(medicalHistoryDto);
 
 	}
 
-	@Override
-	public void searchOrder(MedicalHistoryDto medicalHistoryDto) throws Exception {
-		MedicalHistoryDao medicalHistoryDao = new MedicalHistoryDaoImpl();
-		PetDto petDto = (medicalHistoryDto.getIdPet());
-		if (!petDao.findPetExist(petDto)) {
-			throw new Exception("No existe ordenes para la mascota");
-		}
-		medicalHistoryDao.searchOrder(medicalHistoryDto);
-	}
 
 	@Override
 	public void createInvoice(InvoiceDto invoiceDto) throws Exception {

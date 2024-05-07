@@ -7,7 +7,7 @@ public interface PetDao {
 
 	public boolean findPetExist(PetDto petDto) throws Exception;
 
-	boolean findById(Long petDto) throws Exception;
+	//public boolean findById(PetDto petDto) throws Exception;
 
 	public PetDto findPetById(PetDto petDto) throws Exception;
 }
